@@ -4,3 +4,5 @@ Sociologists highlight the importance of institutional stratification in reprodu
 
 I am currently managing all the coding related to the segregation paper within this repository. Specifically, I am working on the R code to study the dataset in the data analysis markdown file, and I am organising the main findings of the data analysis in the paper markdown.
 
+
+
