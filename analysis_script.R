@@ -91,5 +91,12 @@ sex_fd2 %>%
 ## Pushing dataset for ethnicity for all first degree students
 ethnicity_fd <- read_sheet('https://docs.google.com/spreadsheets/d/1FXRqnLIw3CFLpIfiDCZ-vZX4eIPEjpstSxzkt5vRkko/edit#gid=653038261')
 
-
+# indicator variables for ethnicity
+# non-white
+ethnicity_fd$non_white [ethnicity_fd$ethnicity == 'Asian'] <- 1
+ethnicity_fd$non_white [ethnicity_fd$ethnicity == 'Black'] <- 1
+ethnicity_fd$non_white [ethnicity_fd$ethnicity == 'Mixed'] <- 1
+ethnicity_fd$non_white [ethnicity_fd$ethnicity == 'Other'] <- 1
+ethnicity_fd$non_white [ethnicity_fd$ethnicity == 'Unknown/not applicable'] <- NA
+ethnicity_fd$non_white [ethnicity_fd$ethnicity == 'White'] <- 0
 
