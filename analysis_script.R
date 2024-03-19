@@ -37,7 +37,6 @@ hei_data %>%
   filter(hei_type5 == 'Oxbridge' | hei_type5 == 'Golden Triangle' | hei_type5 == 'Russell Group') %>% 
   print(n = 24) 
 
-
 ################################################################################################################
 # Sex ----
 ################################################################################################################
@@ -186,11 +185,39 @@ ethnicity_fd2 <- merge(ethnicity_fd, hei_data, by = 'hei', all.x = T)
 ethnicity_fd2 %>% 
   filter(fte != 'NA') %>% 
   filter(ethnicity != 'Unknown/not applicable') %>% 
-  filter (hei_type5 == 'Oxbridge' | hei_type5 == 'Golden Triangle' | hei_type5 == 'Russell Group') %>% 
   select('acyear', 'hei', 'hei_type5','ethnicity', 'fte') %>% 
-  filter(acyear == '2010' | acyear == '2020') %>% 
   group_by(acyear, hei_type5, hei) %>% 
   summarise(simpson = simpson(fte)) %>% 
-  ggplot(aes(x=simpson, y=hei, colour = hei_type5)) +
+  filter (hei_type5 == 'Oxbridge' | hei_type5 == 'Golden Triangle' | hei_type5 == 'Russell Group') %>% 
+  filter(acyear == '2010' | acyear == '2020') %>% 
+  ggplot(aes(y=hei, x=simpson, colour = acyear)) +
   geom_point(size = 3) +
   theme_minimal()
+
+# Segplot
+
+ethnicity_fd2 %>% 
+  filter(fte != 'NA') %>%
+  filter(ethnicity != 'Unknown/not applicable' ) %>%
+  filter(acyear == '2020') %>% 
+  segplot(., "ethnicity", "hei", weight = "fte",
+          secondary_plot = "segregation")
+
+
+################################################################################################################
+# Nationality ----
+################################################################################################################
+# First degree ----
+# The first part of the analysis will consider all undergraduate students (first year students and non-first year students)
+
+## Pushing dataset for nationality for all first degree students
+nationality_fd <- read_sheet('https://docs.google.com/spreadsheets/d/1t13n8PYYs_hh30lIwrGsSPwlFvydv014i0he7RqUadc/edit#gid=1229016447')
+
+nationality_fd$non_UK [nationality_fd$nationality == 'European Union'] <- 1
+nationality_fd$non_UK [nationality_fd$nationality == 'Non-European Union'] <- 1
+nationality_fd$non_UK [nationality_fd$nationality == 'Not known/stateless'] <- NA
+nationality_fd$non_UK [nationality_fd$nationality == 'United Kingdom'] <- 0
+
+nationality_fd$non_UK <- factor(nationality_fd$non_UK,
+                                  levels = c(0,1),
+                                  labels = c("UK", "non-UK")) # labels
