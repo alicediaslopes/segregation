@@ -213,6 +213,7 @@ ethnicity_fd2 %>%
 ## Pushing dataset for nationality for all first degree students
 nationality_fd <- read_sheet('https://docs.google.com/spreadsheets/d/1t13n8PYYs_hh30lIwrGsSPwlFvydv014i0he7RqUadc/edit#gid=1229016447')
 
+# non-UK vs UK
 nationality_fd$non_UK [nationality_fd$nationality == 'European Union'] <- 1
 nationality_fd$non_UK [nationality_fd$nationality == 'Non-European Union'] <- 1
 nationality_fd$non_UK [nationality_fd$nationality == 'Not known/stateless'] <- NA
@@ -221,3 +222,41 @@ nationality_fd$non_UK [nationality_fd$nationality == 'United Kingdom'] <- 0
 nationality_fd$non_UK <- factor(nationality_fd$non_UK,
                                   levels = c(0,1),
                                   labels = c("UK", "non-UK")) # labels
+
+# non_EU vs UK
+nationality_datanon_EU = 99
+nationality_data$non_EU [nationality_data$nationality == 'European Union'] <- NA
+nationality_data$non_EU [nationality_data$nationality == 'Non-European Union'] <- 1
+nationality_data$non_EU [nationality_data$nationality == 'Not known/stateless'] <- NA
+nationality_data$non_EU [nationality_data$nationality == 'United Kingdom'] <- 0
+
+nationality_data$non_EU <- factor(nationality_data$non_EU,
+                                  levels = c(0,1),
+                                  labels = c("UK", "non-EU")) # labels
+
+nationality_data %>% filter (nationality_data$non_EU != 'NA') %>% 
+  group_by(acyear) %>%
+  group_modify(~
+                 dissimilarity(data = .x,
+                               group = 'non_EU',
+                               unit = 'hei',
+                               weight = 'fte'))              
+
+# EU vs UK
+nationality_data$EU [nationality_data$nationality == 'European Union'] <- 1
+nationality_data$EU [nationality_data$nationality == 'Non-European Union'] <- NA
+nationality_data$EU [nationality_data$nationality == 'Not known/stateless'] <- NA
+nationality_data$EU [nationality_data$nationality == 'United Kingdom'] <- 0
+
+
+nationality_data$EU <- factor(nationality_data$EU,
+                              levels = c(0,1),
+                              labels = c("UK", "EU")) # labels
+
+nationality_data %>% filter (nationality_data$EU != 'NA') %>% 
+  group_by(acyear) %>%
+  group_modify(~
+                 dissimilarity(data = .x,
+                               group = 'EU',
+                               unit = 'hei',
+                               weight = 'fte'))
