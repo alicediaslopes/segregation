@@ -468,9 +468,32 @@ disability_fd %>%
                                unit = 'hei',
                                weight = 'fte'))
 
+# PGR degree ----
+# The first part of the analysis will consider all PGR students (first year students and non-first year students)
+
+## Pushing dataset for disability for all PGR students
+disability_pgr <-  read_sheet('https://docs.google.com/spreadsheets/d/16o4wb0uIM9nL58fuOX5KgGXscuPB3dK0AzxfC0M0emI/edit#gid=412824841')
+names(disability_pgr)
+
+class(disability_pgr$disability)
+disability_pgr$disability <- as.factor(disability_pgr$disability)
+
+disability_pgr %>% 
+  group_by(acyear) %>%
+  group_modify(~
+                 dissimilarity(data = .x,
+                               group = 'disability',
+                               unit = 'hei',
+                               weight = 'fte'))
+
+
 ################################################################################################################
 # Age ----
 ################################################################################################################
+# First degree ----
+# The first part of the analysis will consider all undergraduate students (first year students and non-first year students)
+
+## Pushing dataset for age for all first degree students
 age_fd <- read_sheet('https://docs.google.com/spreadsheets/d/1R4WRaHcRM8dzELhBWWtmqdiczxfUrPliIgu6c0YkAks/edit#gid=685963593')
 names(age_fd)
 
@@ -494,3 +517,33 @@ age_fd %>% filter (age_fd$over25 != 'NA') %>%
                                group = 'over25',
                                unit = 'hei',
                                weight = 'fte'))
+
+# PGR degree ----
+# The first part of the analysis will consider all PGR students (first year students and non-first year students)
+
+## Pushing dataset for age for all PGR students
+age_pgr <- read_sheet('https://docs.google.com/spreadsheets/d/17QjW4AbAARVZbgzqU1zWa5x-2WS0UJpFBYTvGR7x0EY/edit#gid=313802572')
+names(age_pgr)
+
+age_pgr$over25 [age_pgr$age == '18 years and under'] <- 0
+age_pgr$over25 [age_pgr$age == '19 years'] <- 0
+age_pgr$over25 [age_pgr$age == '20 years'] <- 0
+age_pgr$over25 [age_pgr$age == '21-24 years'] <- 0
+age_pgr$over25 [age_pgr$age == '25-29 years'] <- 1
+age_pgr$over25 [age_pgr$age == '30 years and over'] <- 1
+age_pgr$over25 [age_pgr$age == 'Age unknown'] <- NA
+
+# labels
+age_pgr$over25 <- factor(age_pgr$over25,
+                        levels = c(0,1),
+                        labels = c("Under 25", "25 and Over"))
+
+age_pgr %>% filter (age_pgr$over25 != 'NA') %>% 
+  group_by(acyear) %>%
+  group_modify(~
+                 dissimilarity(data = .x,
+                               group = 'over25',
+                               unit = 'hei',
+                               weight = 'fte'))
+
+
