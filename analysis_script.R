@@ -106,6 +106,32 @@ sex_pgr %>% filter(sex_pgr$female != 'NA') %>%
                                unit = 'hei',
                                weight = 'fte'))
 
+
+# Academic staff ----
+
+## Pushing the dataset for sex for academic staff
+sex_staff <- read_sheet('https://docs.google.com/spreadsheets/d/1Kgc4sBxWaMhQwRaCFriOyiL4Zt0g8syi6aFeweLD0Bw/edit#gid=1202832876')
+
+# Excluding 'Other' and 'Not known' from the analysis.
+sex_staff$female [sex_staff$sex == 'Female'] <- 1
+sex_staff$female [sex_staff$sex == 'Male'] <- 0
+sex_staff$female [sex_staff$sex == 'Other'] <- NA
+sex_staff$female [sex_staff$sex == 'Not known'] <- NA
+
+
+sex_staff$female <- factor(sex_staff$female,
+                         levels = c(0,1),
+                         labels = c("Male", "Female")) # labels
+
+# dissimilarity index for sex
+sex_staff %>% filter(sex_staff$female != 'NA') %>% 
+  group_by(acyear) %>%
+  group_modify(~
+                 dissimilarity(data = .x,
+                               group = 'female',
+                               unit = 'hei',
+                               weight = 'fte'))
+
 ################################################################################################################
 # Ethnicity ----
 ################################################################################################################
@@ -313,6 +339,98 @@ ethnicity_pgr$mixed <- factor(ethnicity_pgr$mixed,
 
 # dissimilarity for Mixed
 ethnicity_pgr %>% filter (ethnicity_pgr$mixed != 'NA') %>% 
+  group_by(acyear) %>%
+  group_modify(~
+                 dissimilarity(data = .x,
+                               group = 'mixed',
+                               unit = 'hei',
+                               weight = 'fte'))
+
+# Staff degree ----
+# The first part of the analysis will consider all PGR students (first year students and non-first year students)
+
+## Pushing dataset for ethnicity for all PGR degree students
+ethnicity_staff <- read_sheet('https://docs.google.com/spreadsheets/d/1kbmW8BlrgcaJd5GPUpgXDXSQCDyZY2eRxf0IyAE5CEg/edit#gid=1611015080')
+
+# indicator variables for ethnicity
+# non-white
+ethnicity_staff$non_white [ethnicity_staff$ethnicity == 'Asian'] <- 1
+ethnicity_staff$non_white [ethnicity_staff$ethnicity == 'Black'] <- 1
+ethnicity_staff$non_white [ethnicity_staff$ethnicity == 'Mixed'] <- 1
+ethnicity_staff$non_white [ethnicity_staff$ethnicity == 'Other'] <- 1
+ethnicity_staff$non_white [ethnicity_staff$ethnicity == 'Unknown/not applicable'] <- NA
+ethnicity_staff$non_white [ethnicity_staff$ethnicity == 'White'] <- 0
+
+
+ethnicity_staff$non_white <- factor(ethnicity_staff$non_white,
+                                  levels = c(0,1),
+                                  labels = c("White", "Nonwhite")) # labels
+
+# dissimilarity index for non-white
+ethnicity_staff %>% filter (ethnicity_staff$non_white != 'NA') %>% 
+  group_by(acyear) %>%
+  group_modify(~
+                 dissimilarity(data = .x,
+                               group = 'non_white',
+                               unit = 'hei',
+                               weight = 'fte'))
+
+# Asian vs White
+ethnicity_staff$asian [ethnicity_staff$ethnicity == 'Asian'] <- 1
+ethnicity_staff$asian [ethnicity_staff$ethnicity == 'Black'] <- NA
+ethnicity_staff$asian [ethnicity_staff$ethnicity == 'Mixed'] <- NA
+ethnicity_staff$asian [ethnicity_staff$ethnicity == 'Other'] <- NA
+ethnicity_staff$asian [ethnicity_staff$ethnicity == 'Unknown/not applicable'] <- NA
+ethnicity_staff$asian [ethnicity_staff$ethnicity == 'White'] <- 0
+
+ethnicity_staff$asian <- factor(ethnicity_staff$asian,
+                              levels = c(0,1),
+                              labels = c("White", "Asian")) # labels
+
+# dissimilarity for Asian
+ethnicity_staff %>% filter (ethnicity_staff$asian != 'NA') %>% 
+  group_by(acyear) %>%
+  group_modify(~
+                 dissimilarity(data = .x,
+                               group = 'asian',
+                               unit = 'hei',
+                               weight = 'fte'))
+
+# Black vs White
+ethnicity_staff$black [ethnicity_staff$ethnicity == 'Asian'] <- NA
+ethnicity_staff$black [ethnicity_staff$ethnicity == 'Black'] <- 1
+ethnicity_staff$black [ethnicity_staff$ethnicity == 'Mixed'] <- NA
+ethnicity_staff$black [ethnicity_staff$ethnicity == 'Other'] <- NA
+ethnicity_staff$black [ethnicity_staff$ethnicity == 'Unknown/not applicable'] <- NA
+ethnicity_staff$black [ethnicity_staff$ethnicity == 'White'] <- 0
+
+ethnicity_staff$black <- factor(ethnicity_staff$black,
+                              levels = c(0,1),
+                              labels = c("White", "Black")) # labels
+
+# dissimilarity for Black
+ethnicity_staff %>% filter (ethnicity_staff$black != 'NA') %>% 
+  group_by(acyear) %>%
+  group_modify(~
+                 dissimilarity(data = .x,
+                               group = 'black',
+                               unit = 'hei',
+                               weight = 'fte'))
+
+# mixed vs white
+ethnicity_staff$mixed [ethnicity_staff$ethnicity == 'Asian'] <- NA
+ethnicity_staff$mixed [ethnicity_staff$ethnicity == 'Black'] <- NA
+ethnicity_staff$mixed [ethnicity_staff$ethnicity == 'Mixed'] <- 1
+ethnicity_staff$mixed [ethnicity_staff$ethnicity == 'Other'] <- NA
+ethnicity_staff$mixed [ethnicity_staff$ethnicity == 'Unknown/not applicable'] <- NA
+ethnicity_staff$mixed [ethnicity_staff$ethnicity == 'White'] <- 0
+
+ethnicity_staff$mixed <- factor(ethnicity_staff$mixed,
+                              levels = c(0,1),
+                              labels = c("White", "Mixed")) # labels
+
+# dissimilarity for Mixed
+ethnicity_staff %>% filter (ethnicity_staff$mixed != 'NA') %>% 
   group_by(acyear) %>%
   group_modify(~
                  dissimilarity(data = .x,
