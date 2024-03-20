@@ -81,6 +81,31 @@ sex_fd2 %>%
   geom_point(size = 3) +
   theme_minimal()
 
+# PGR degree ----
+# The first part of the analysis will consider all PGR students (first year students and non-first year students)
+
+## Pushing dataset for sex for all first degree students
+sex_pgr <- read_sheet('https://docs.google.com/spreadsheets/d/1Z5TtGZXN6b_loViNuz8by4aSLrX138UA2LFhW-62UgY/edit#gid=399871028')
+
+# Excluding 'Other' from the analysis.
+table(sex_pgr$sex)
+sex_pgr$female [sex_pgr$sex == 'Female'] <- 1
+sex_pgr$female [sex_pgr$sex == 'Male'] <- 0
+sex_pgr$female [sex_pgr$sex == 'Other'] <- NA
+
+sex_pgr$female <- factor(sex_pgr$female,
+                        levels = c(0,1),
+                        labels = c("Male", "Female")) # labels
+
+# dissimilarity index for sex
+sex_pgr %>% filter(sex_pgr$female != 'NA') %>% 
+  group_by(acyear) %>%
+  group_modify(~
+                 dissimilarity(data = .x,
+                               group = 'female',
+                               unit = 'hei',
+                               weight = 'fte'))
+
 ################################################################################################################
 # Ethnicity ----
 ################################################################################################################
@@ -203,7 +228,97 @@ ethnicity_fd2 %>%
   segplot(., "ethnicity", "hei", weight = "fte",
           secondary_plot = "segregation")
 
+# PGR degree ----
+# The first part of the analysis will consider all PGR students (first year students and non-first year students)
 
+## Pushing dataset for ethnicity for all PGR degree students
+ethnicity_pgr <- read_sheet('https://docs.google.com/spreadsheets/d/13i-D-dYL7m_oDJNEW8kBHR80OxbjusrQ4Kn5PgAFisg/edit#gid=1368204546')
+
+# indicator variables for ethnicity
+# non-white
+ethnicity_pgr$non_white [ethnicity_pgr$ethnicity == 'Asian'] <- 1
+ethnicity_pgr$non_white [ethnicity_pgr$ethnicity == 'Black'] <- 1
+ethnicity_pgr$non_white [ethnicity_pgr$ethnicity == 'Mixed'] <- 1
+ethnicity_pgr$non_white [ethnicity_pgr$ethnicity == 'Other'] <- 1
+ethnicity_pgr$non_white [ethnicity_pgr$ethnicity == 'Unknown/not applicable'] <- NA
+ethnicity_pgr$non_white [ethnicity_pgr$ethnicity == 'White'] <- 0
+
+
+ethnicity_pgr$non_white <- factor(ethnicity_pgr$non_white,
+                                 levels = c(0,1),
+                                 labels = c("White", "Nonwhite")) # labels
+
+# dissimilarity index for non-white
+ethnicity_pgr %>% filter (ethnicity_pgr$non_white != 'NA') %>% 
+  group_by(acyear) %>%
+  group_modify(~
+                 dissimilarity(data = .x,
+                               group = 'non_white',
+                               unit = 'hei',
+                               weight = 'fte'))
+
+# Asian vs White
+ethnicity_pgr$asian [ethnicity_pgr$ethnicity == 'Asian'] <- 1
+ethnicity_pgr$asian [ethnicity_pgr$ethnicity == 'Black'] <- NA
+ethnicity_pgr$asian [ethnicity_pgr$ethnicity == 'Mixed'] <- NA
+ethnicity_pgr$asian [ethnicity_pgr$ethnicity == 'Other'] <- NA
+ethnicity_pgr$asian [ethnicity_pgr$ethnicity == 'Unknown/not applicable'] <- NA
+ethnicity_pgr$asian [ethnicity_pgr$ethnicity == 'White'] <- 0
+
+ethnicity_pgr$asian <- factor(ethnicity_pgr$asian,
+                             levels = c(0,1),
+                             labels = c("White", "Asian")) # labels
+
+# dissimilarity for Asian
+ethnicity_pgr %>% filter (ethnicity_pgr$asian != 'NA') %>% 
+  group_by(acyear) %>%
+  group_modify(~
+                 dissimilarity(data = .x,
+                               group = 'asian',
+                               unit = 'hei',
+                               weight = 'fte'))
+
+# Black vs White
+ethnicity_pgr$black [ethnicity_pgr$ethnicity == 'Asian'] <- NA
+ethnicity_pgr$black [ethnicity_pgr$ethnicity == 'Black'] <- 1
+ethnicity_pgr$black [ethnicity_pgr$ethnicity == 'Mixed'] <- NA
+ethnicity_pgr$black [ethnicity_pgr$ethnicity == 'Other'] <- NA
+ethnicity_pgr$black [ethnicity_pgr$ethnicity == 'Unknown/not applicable'] <- NA
+ethnicity_pgr$black [ethnicity_pgr$ethnicity == 'White'] <- 0
+
+ethnicity_pgr$black <- factor(ethnicity_pgr$black,
+                             levels = c(0,1),
+                             labels = c("White", "Black")) # labels
+
+# dissimilarity for Black
+ethnicity_pgr %>% filter (ethnicity_pgr$black != 'NA') %>% 
+  group_by(acyear) %>%
+  group_modify(~
+                 dissimilarity(data = .x,
+                               group = 'black',
+                               unit = 'hei',
+                               weight = 'fte'))
+
+# mixed vs white
+ethnicity_pgr$mixed [ethnicity_pgr$ethnicity == 'Asian'] <- NA
+ethnicity_pgr$mixed [ethnicity_pgr$ethnicity == 'Black'] <- NA
+ethnicity_pgr$mixed [ethnicity_pgr$ethnicity == 'Mixed'] <- 1
+ethnicity_pgr$mixed [ethnicity_pgr$ethnicity == 'Other'] <- NA
+ethnicity_pgr$mixed [ethnicity_pgr$ethnicity == 'Unknown/not applicable'] <- NA
+ethnicity_pgr$mixed [ethnicity_pgr$ethnicity == 'White'] <- 0
+
+ethnicity_pgr$mixed <- factor(ethnicity_pgr$mixed,
+                             levels = c(0,1),
+                             labels = c("White", "Mixed")) # labels
+
+# dissimilarity for Mixed
+ethnicity_pgr %>% filter (ethnicity_pgr$mixed != 'NA') %>% 
+  group_by(acyear) %>%
+  group_modify(~
+                 dissimilarity(data = .x,
+                               group = 'mixed',
+                               unit = 'hei',
+                               weight = 'fte'))
 ################################################################################################################
 # Nationality ----
 ################################################################################################################
@@ -211,30 +326,38 @@ ethnicity_fd2 %>%
 # The first part of the analysis will consider all undergraduate students (first year students and non-first year students)
 
 ## Pushing dataset for nationality for all first degree students
-nationality_fd <- read_sheet('https://docs.google.com/spreadsheets/d/1t13n8PYYs_hh30lIwrGsSPwlFvydv014i0he7RqUadc/edit#gid=1229016447')
+nationality_pgr <- read_sheet('https://docs.google.com/spreadsheets/d/1t13n8PYYs_hh30lIwrGsSPwlFvydv014i0he7RqUadc/edit#gid=1229016447')
 
 # non-UK vs UK
-nationality_fd$non_UK [nationality_fd$nationality == 'European Union'] <- 1
-nationality_fd$non_UK [nationality_fd$nationality == 'Non-European Union'] <- 1
-nationality_fd$non_UK [nationality_fd$nationality == 'Not known/stateless'] <- NA
-nationality_fd$non_UK [nationality_fd$nationality == 'United Kingdom'] <- 0
+nationality_pgr$non_UK [nationality_pgr$nationality == 'European Union'] <- 1
+nationality_pgr$non_UK [nationality_pgr$nationality == 'Non-European Union'] <- 1
+nationality_pgr$non_UK [nationality_pgr$nationality == 'Not known/stateless'] <- NA
+nationality_pgr$non_UK [nationality_pgr$nationality == 'United Kingdom'] <- 0
 
-nationality_fd$non_UK <- factor(nationality_fd$non_UK,
+nationality_pgr$non_UK <- factor(nationality_pgr$non_UK,
                                   levels = c(0,1),
                                   labels = c("UK", "non-UK")) # labels
 
-# non_EU vs UK
-nationality_datanon_EU = 99
-nationality_data$non_EU [nationality_data$nationality == 'European Union'] <- NA
-nationality_data$non_EU [nationality_data$nationality == 'Non-European Union'] <- 1
-nationality_data$non_EU [nationality_data$nationality == 'Not known/stateless'] <- NA
-nationality_data$non_EU [nationality_data$nationality == 'United Kingdom'] <- 0
+nationality_fd %>% filter (nationality_fd$non_UK != 'NA') %>% 
+  group_by(acyear) %>%
+  group_modify(~
+                 dissimilarity(data = .x,
+                               group = 'non_UK',
+                               unit = 'hei',
+                               weight = 'fte'))
 
-nationality_data$non_EU <- factor(nationality_data$non_EU,
+# non_EU vs UK
+nationality_fdnon_EU = 99
+nationality_fd$non_EU [nationality_fd$nationality == 'European Union'] <- NA
+nationality_fd$non_EU [nationality_fd$nationality == 'Non-European Union'] <- 1
+nationality_fd$non_EU [nationality_fd$nationality == 'Not known/stateless'] <- NA
+nationality_fd$non_EU [nationality_fd$nationality == 'United Kingdom'] <- 0
+
+nationality_fd$non_EU <- factor(nationality_fd$non_EU,
                                   levels = c(0,1),
                                   labels = c("UK", "non-EU")) # labels
 
-nationality_data %>% filter (nationality_data$non_EU != 'NA') %>% 
+nationality_fd %>% filter (nationality_fd$non_EU != 'NA') %>% 
   group_by(acyear) %>%
   group_modify(~
                  dissimilarity(data = .x,
@@ -243,20 +366,131 @@ nationality_data %>% filter (nationality_data$non_EU != 'NA') %>%
                                weight = 'fte'))              
 
 # EU vs UK
-nationality_data$EU [nationality_data$nationality == 'European Union'] <- 1
-nationality_data$EU [nationality_data$nationality == 'Non-European Union'] <- NA
-nationality_data$EU [nationality_data$nationality == 'Not known/stateless'] <- NA
-nationality_data$EU [nationality_data$nationality == 'United Kingdom'] <- 0
+nationality_fd$EU [nationality_fd$nationality == 'European Union'] <- 1
+nationality_fd$EU [nationality_fd$nationality == 'Non-European Union'] <- NA
+nationality_fd$EU [nationality_fd$nationality == 'Not known/stateless'] <- NA
+nationality_fd$EU [nationality_fd$nationality == 'United Kingdom'] <- 0
 
 
-nationality_data$EU <- factor(nationality_data$EU,
+nationality_fd$EU <- factor(nationality_fd$EU,
                               levels = c(0,1),
                               labels = c("UK", "EU")) # labels
 
-nationality_data %>% filter (nationality_data$EU != 'NA') %>% 
+nationality_fd %>% filter (nationality_fd$EU != 'NA') %>% 
   group_by(acyear) %>%
   group_modify(~
                  dissimilarity(data = .x,
                                group = 'EU',
+                               unit = 'hei',
+                               weight = 'fte'))
+
+# PGR degree ----
+# The first part of the analysis will consider all PGRR students (first year students and non-first year students)
+
+## Pushing dataset for nationality for all first degree students
+nationality_pgr <- read_sheet('https://docs.google.com/spreadsheets/d/1wR-nPWghx2b56uUP29g_CP3y6MqTeX66U7k_kwudRoM/edit#gid=1330270309')
+
+# non-UK vs UK
+nationality_pgr$non_UK [nationality_pgr$nationality == 'European Union'] <- 1
+nationality_pgr$non_UK [nationality_pgr$nationality == 'Non-European Union'] <- 1
+nationality_pgr$non_UK [nationality_pgr$nationality == 'Not known/stateless'] <- NA
+nationality_pgr$non_UK [nationality_pgr$nationality == 'United Kingdom'] <- 0
+
+nationality_pgr$non_UK <- factor(nationality_pgr$non_UK,
+                                levels = c(0,1),
+                                labels = c("UK", "non-UK")) # labels
+
+nationality_pgr %>% filter (nationality_pgr$non_UK != 'NA') %>% 
+  group_by(acyear) %>%
+  group_modify(~
+                 dissimilarity(data = .x,
+                               group = 'non_UK',
+                               unit = 'hei',
+                               weight = 'fte')) 
+
+# non_EU vs UK
+nationality_pgrnon_EU = 99
+nationality_pgr$non_EU [nationality_pgr$nationality == 'European Union'] <- NA
+nationality_pgr$non_EU [nationality_pgr$nationality == 'Non-European Union'] <- 1
+nationality_pgr$non_EU [nationality_pgr$nationality == 'Not known/stateless'] <- NA
+nationality_pgr$non_EU [nationality_pgr$nationality == 'United Kingdom'] <- 0
+
+nationality_pgr$non_EU <- factor(nationality_pgr$non_EU,
+                                  levels = c(0,1),
+                                  labels = c("UK", "non-EU")) # labels
+
+nationality_pgr %>% filter (nationality_pgr$non_EU != 'NA') %>% 
+  group_by(acyear) %>%
+  group_modify(~
+                 dissimilarity(data = .x,
+                               group = 'non_EU',
+                               unit = 'hei',
+                               weight = 'fte'))              
+
+# EU vs UK
+nationality_pgr$EU [nationality_pgr$nationality == 'European Union'] <- 1
+nationality_pgr$EU [nationality_pgr$nationality == 'Non-European Union'] <- NA
+nationality_pgr$EU [nationality_pgr$nationality == 'Not known/stateless'] <- NA
+nationality_pgr$EU [nationality_pgr$nationality == 'United Kingdom'] <- 0
+
+
+nationality_pgr$EU <- factor(nationality_pgr$EU,
+                              levels = c(0,1),
+                              labels = c("UK", "EU")) # labels
+
+nationality_pgr %>% filter (nationality_pgr$EU != 'NA') %>% 
+  group_by(acyear) %>%
+  group_modify(~
+                 dissimilarity(data = .x,
+                               group = 'EU',
+                               unit = 'hei',
+                               weight = 'fte'))
+
+
+################################################################################################################
+# Disability ----
+################################################################################################################
+# First degree ----
+# The first part of the analysis will consider all undergraduate students (first year students and non-first year students)
+
+## Pushing dataset for disability for all first degree students
+disability_fd <-  read_sheet('https://docs.google.com/spreadsheets/d/1G3SXcuOUSyvb5SZSB_kNcTy5LIXQslRIk8FlVVh-zdM/edit#gid=283440639')
+names(disability_fd)
+
+class(disability_fd$disability)
+disability_fd$disability <- as.factor(disability_fd$disability)
+
+disability_fd %>% 
+  group_by(acyear) %>%
+  group_modify(~
+                 dissimilarity(data = .x,
+                               group = 'disability',
+                               unit = 'hei',
+                               weight = 'fte'))
+
+################################################################################################################
+# Age ----
+################################################################################################################
+age_fd <- read_sheet('https://docs.google.com/spreadsheets/d/1R4WRaHcRM8dzELhBWWtmqdiczxfUrPliIgu6c0YkAks/edit#gid=685963593')
+names(age_fd)
+
+age_fd$over25 [age_fd$age == '18 years and under'] <- 0
+age_fd$over25 [age_fd$age == '19 years'] <- 0
+age_fd$over25 [age_fd$age == '20 years'] <- 0
+age_fd$over25 [age_fd$age == '21-24 years'] <- 0
+age_fd$over25 [age_fd$age == '25-29 years'] <- 1
+age_fd$over25 [age_fd$age == '30 years and over'] <- 1
+age_fd$over25 [age_fd$age == 'Age unknown'] <- NA
+
+# labels
+age_fd$over25 <- factor(age_fd$over25,
+                          levels = c(0,1),
+                          labels = c("Under 25", "25 and Over"))
+
+age_fd %>% filter (age_fd$over25 != 'NA') %>% 
+  group_by(acyear) %>%
+  group_modify(~
+                 dissimilarity(data = .x,
+                               group = 'over25',
                                unit = 'hei',
                                weight = 'fte'))
