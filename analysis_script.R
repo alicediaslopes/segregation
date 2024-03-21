@@ -245,14 +245,6 @@ ethnicity_fd2 %>%
   geom_point(size = 3) +
   theme_minimal()
 
-# Segplot
-ethnicity_fd2 %>% 
-  filter(fte != 'NA') %>%
-  filter(ethnicity != 'Unknown/not applicable' ) %>%
-  filter(acyear == '2020') %>% 
-  segplot(., "ethnicity", "hei", weight = "fte",
-          secondary_plot = "segregation")
-
 # PGR degree ----
 # The first part of the analysis will consider all PGR students (first year students and non-first year students)
 

@@ -35,7 +35,6 @@ sex_fd <- read_sheet('https://docs.google.com/spreadsheets/d/17stHJW9QLd8FbEqjaM
 # Merging the sex for first degree students and HEI info datasets
 sex_fd2 <- merge(sex_fd, hei_data, by = 'hei', all.x = T)
 
-# Segplot
 #2010
 sex_fd2 %>% 
   filter(fte != 'NA') %>%
@@ -60,7 +59,6 @@ ethnicity_fd <- read_sheet('https://docs.google.com/spreadsheets/d/1FXRqnLIw3CFL
 # Merging the ethnicity for first degree students and HEI info datasets
 ethnicity_fd2 <- merge(ethnicity_fd, hei_data, by = 'hei', all.x = T)
 
-# Segplot
 # 2010
 ethnicity_fd2 %>% 
   filter(fte != 'NA') %>%
@@ -83,7 +81,6 @@ ethnicity_pgr <- read_sheet('https://docs.google.com/spreadsheets/d/13i-D-dYL7m_
 # Merging the ethnicity for PGR students and HEI info datasets
 ethnicity_pgr2 <- merge(ethnicity_pgr, hei_data, by = 'hei', all.x = T)
 
-# Segplot
 # 2010
 ethnicity_pgr2 %>% 
   filter(fte != 'NA') %>%
@@ -106,7 +103,6 @@ ethnicity_staff <- read_sheet('https://docs.google.com/spreadsheets/d/1kbmW8Blrg
 # Merging the ethnicity for staff and HEI info datasets
 ethnicity_staff2 <- merge(ethnicity_staff, hei_data, by = 'hei', all.x = T)
 
-# Segplot
 # 2010
 ethnicity_staff2 %>% 
   filter(fte != 'NA') %>%
@@ -132,7 +128,6 @@ nationality_fd <- read_sheet('https://docs.google.com/spreadsheets/d/1t13n8PYYs_
 # Merging the ethnicity for first degree students and HEI info datasets
 nationality_fd2 <- merge(nationality_fd, hei_data, by = 'hei', all.x = T)
 
-# Segplot
 # 2010
 nationality_fd2 %>% 
   filter(fte != 'NA') %>%
@@ -171,8 +166,6 @@ nationality_pgr2 %>%
   filter(acyear == '2020') %>% 
   segplot(., "nationality", "hei", weight = "fte",
           secondary_plot = "segregation", order = "majority_fixed")
-
-
 
 # Staff ----
 ## Pushing dataset for nationality for all first degree students
