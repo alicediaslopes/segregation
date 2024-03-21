@@ -106,8 +106,8 @@ sex_pgr %>% filter(sex_pgr$female != 'NA') %>%
                                unit = 'hei',
                                weight = 'fte'))
 
-
-# Academic staff ----
+# Staff ----
+# The first part of the analysis will consider all academic staff
 
 ## Pushing the dataset for sex for academic staff
 sex_staff <- read_sheet('https://docs.google.com/spreadsheets/d/1Kgc4sBxWaMhQwRaCFriOyiL4Zt0g8syi6aFeweLD0Bw/edit#gid=1202832876')
@@ -246,7 +246,6 @@ ethnicity_fd2 %>%
   theme_minimal()
 
 # Segplot
-
 ethnicity_fd2 %>% 
   filter(fte != 'NA') %>%
   filter(ethnicity != 'Unknown/not applicable' ) %>%
@@ -346,8 +345,8 @@ ethnicity_pgr %>% filter (ethnicity_pgr$mixed != 'NA') %>%
                                unit = 'hei',
                                weight = 'fte'))
 
-# Staff degree ----
-# The first part of the analysis will consider all PGR students (first year students and non-first year students)
+# Staff ----
+# The first part of the analysis will consider all academic staff
 
 ## Pushing dataset for ethnicity for all PGR degree students
 ethnicity_staff <- read_sheet('https://docs.google.com/spreadsheets/d/1kbmW8BlrgcaJd5GPUpgXDXSQCDyZY2eRxf0IyAE5CEg/edit#gid=1611015080')
@@ -444,15 +443,15 @@ ethnicity_staff %>% filter (ethnicity_staff$mixed != 'NA') %>%
 # The first part of the analysis will consider all undergraduate students (first year students and non-first year students)
 
 ## Pushing dataset for nationality for all first degree students
-nationality_pgr <- read_sheet('https://docs.google.com/spreadsheets/d/1t13n8PYYs_hh30lIwrGsSPwlFvydv014i0he7RqUadc/edit#gid=1229016447')
+nationality_fd <- read_sheet('https://docs.google.com/spreadsheets/d/1t13n8PYYs_hh30lIwrGsSPwlFvydv014i0he7RqUadc/edit#gid=1229016447')
 
 # non-UK vs UK
-nationality_pgr$non_UK [nationality_pgr$nationality == 'European Union'] <- 1
-nationality_pgr$non_UK [nationality_pgr$nationality == 'Non-European Union'] <- 1
-nationality_pgr$non_UK [nationality_pgr$nationality == 'Not known/stateless'] <- NA
-nationality_pgr$non_UK [nationality_pgr$nationality == 'United Kingdom'] <- 0
+nationality_fd$non_UK [nationality_fd$nationality == 'European Union'] <- 1
+nationality_fd$non_UK [nationality_fd$nationality == 'Non-European Union'] <- 1
+nationality_fd$non_UK [nationality_fd$nationality == 'Not known/stateless'] <- NA
+nationality_fd$non_UK [nationality_fd$nationality == 'United Kingdom'] <- 0
 
-nationality_pgr$non_UK <- factor(nationality_pgr$non_UK,
+nationality_fd$non_UK <- factor(nationality_fd$non_UK,
                                   levels = c(0,1),
                                   labels = c("UK", "non-UK")) # labels
 
@@ -564,6 +563,67 @@ nationality_pgr %>% filter (nationality_pgr$EU != 'NA') %>%
                                unit = 'hei',
                                weight = 'fte'))
 
+# Staff ----
+# The first part of the analysis will consider all academic staff
+
+## Pushing dataset for nationality for all first degree students
+nationality_staff <- read_sheet('https://docs.google.com/spreadsheets/d/12NT0-FqsB8smNjxpES3cCXWSDgBbnDYZYKJxoFoLUko/edit#gid=1918533626')
+
+# non-UK vs UK
+nationality_staff$non_UK [nationality_staff$nationality == 'European Union'] <- 1
+nationality_staff$non_UK [nationality_staff$nationality == 'Non-European Union'] <- 1
+nationality_staff$non_UK [nationality_staff$nationality == 'Not known/stateless'] <- NA
+nationality_staff$non_UK [nationality_staff$nationality == 'United Kingdom'] <- 0
+
+nationality_staff$non_UK <- factor(nationality_staff$non_UK,
+                                 levels = c(0,1),
+                                 labels = c("UK", "non-UK")) # labels
+
+nationality_staff %>% filter (nationality_staff$non_UK != 'NA') %>% 
+  group_by(acyear) %>%
+  group_modify(~
+                 dissimilarity(data = .x,
+                               group = 'non_UK',
+                               unit = 'hei',
+                               weight = 'fte')) 
+
+# non_EU vs UK
+nationality_staffnon_EU = 99
+nationality_staff$non_EU [nationality_staff$nationality == 'European Union'] <- NA
+nationality_staff$non_EU [nationality_staff$nationality == 'Non-European Union'] <- 1
+nationality_staff$non_EU [nationality_staff$nationality == 'Not known/stateless'] <- NA
+nationality_staff$non_EU [nationality_staff$nationality == 'United Kingdom'] <- 0
+
+nationality_staff$non_EU <- factor(nationality_staff$non_EU,
+                                 levels = c(0,1),
+                                 labels = c("UK", "non-EU")) # labels
+
+nationality_staff %>% filter (nationality_staff$non_EU != 'NA') %>% 
+  group_by(acyear) %>%
+  group_modify(~
+                 dissimilarity(data = .x,
+                               group = 'non_EU',
+                               unit = 'hei',
+                               weight = 'fte'))              
+
+# EU vs UK
+nationality_staff$EU [nationality_staff$nationality == 'European Union'] <- 1
+nationality_staff$EU [nationality_staff$nationality == 'Non-European Union'] <- NA
+nationality_staff$EU [nationality_staff$nationality == 'Not known/stateless'] <- NA
+nationality_staff$EU [nationality_staff$nationality == 'United Kingdom'] <- 0
+
+
+nationality_staff$EU <- factor(nationality_staff$EU,
+                             levels = c(0,1),
+                             labels = c("UK", "EU")) # labels
+
+nationality_staff %>% filter (nationality_staff$EU != 'NA') %>% 
+  group_by(acyear) %>%
+  group_modify(~
+                 dissimilarity(data = .x,
+                               group = 'EU',
+                               unit = 'hei',
+                               weight = 'fte'))
 
 ################################################################################################################
 # Disability ----
