@@ -664,6 +664,23 @@ disability_pgr %>%
                                unit = 'hei',
                                weight = 'fte'))
 
+# Staff ----
+# The first part of the analysis will consider all academic staff
+
+## Pushing dataset for disability for all first degree students
+disability_staff <-  read_sheet('https://docs.google.com/spreadsheets/d/1xP0Jl4nZzxXGmpEtcc3eecQHYL_mGUcu6QQVm1s1O4Y/edit#gid=1893830763')
+names(disability_staff)
+
+class(disability_staff$disability)
+disability_staff$disability <- as.factor(disability_staff$disability)
+
+disability_staff %>% 
+  group_by(acyear) %>%
+  group_modify(~
+                 dissimilarity(data = .x,
+                               group = 'disability',
+                               unit = 'hei',
+                               weight = 'fte'))
 
 ################################################################################################################
 # Age ----

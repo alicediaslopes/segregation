@@ -41,7 +41,7 @@ sex_fd2 %>%
   filter(fte != 'NA') %>%
   filter(acyear == '2010') %>% 
   segplot(., "sex", "hei", weight = "fte",
-          secondary_plot = "segregation")
+          secondary_plot = "segregation", order = "majority")
 #2020
 sex_fd2 %>% 
   filter(fte != 'NA') %>%
@@ -67,11 +67,132 @@ ethnicity_fd2 %>%
   filter(ethnicity != 'Unknown/not applicable' ) %>%
   filter(acyear == '2010') %>% 
   segplot(., "ethnicity", "hei", weight = "fte",
-          secondary_plot = "segregation")
+          secondary_plot = "segregation", order = "majority_fixed")
 # 2020
 ethnicity_fd2 %>% 
   filter(fte != 'NA') %>%
   filter(ethnicity != 'Unknown/not applicable' ) %>%
   filter(acyear == '2020') %>% 
   segplot(., "ethnicity", "hei", weight = "fte",
+          secondary_plot = "segregation", order = "majority_fixed")
+
+# PGR degree ----
+## Pushing dataset for ethnicity for all PGR degree students
+ethnicity_pgr <- read_sheet('https://docs.google.com/spreadsheets/d/13i-D-dYL7m_oDJNEW8kBHR80OxbjusrQ4Kn5PgAFisg/edit#gid=1368204546')
+
+# Merging the ethnicity for PGR students and HEI info datasets
+ethnicity_pgr2 <- merge(ethnicity_pgr, hei_data, by = 'hei', all.x = T)
+
+# Segplot
+# 2010
+ethnicity_pgr2 %>% 
+  filter(fte != 'NA') %>%
+  filter(ethnicity != 'Unknown/not applicable' ) %>%
+  filter(acyear == '2010') %>% 
+  segplot(., "ethnicity", "hei", weight = "fte",
+          secondary_plot = "segregation", order = "majority_fixed")
+# 2020
+ethnicity_pgr2 %>% 
+  filter(fte != 'NA') %>%
+  filter(ethnicity != 'Unknown/not applicable' ) %>%
+  filter(acyear == '2020') %>% 
+  segplot(., "ethnicity", "hei", weight = "fte",
+          secondary_plot = "segregation", order = "majority_fixed")
+
+# Staff ----
+## Pushing dataset for ethnicity for all PGR degree students
+ethnicity_staff <- read_sheet('https://docs.google.com/spreadsheets/d/1kbmW8BlrgcaJd5GPUpgXDXSQCDyZY2eRxf0IyAE5CEg/edit#gid=1611015080')
+
+# Merging the ethnicity for staff and HEI info datasets
+ethnicity_staff2 <- merge(ethnicity_staff, hei_data, by = 'hei', all.x = T)
+
+# Segplot
+# 2010
+ethnicity_staff2 %>% 
+  filter(fte != 'NA') %>%
+  filter(ethnicity != 'Unknown/not applicable' ) %>%
+  filter(acyear == '2010') %>% 
+  segplot(., "ethnicity", "hei", weight = "fte",
+          secondary_plot = "segregation", order = "majority_fixed")
+# 2020
+ethnicity_staff2 %>% 
+  filter(fte != 'NA') %>%
+  filter(ethnicity != 'Unknown/not applicable' ) %>%
+  filter(acyear == '2020') %>% 
+  segplot(., "ethnicity", "hei", weight = "fte",
+          secondary_plot = "segregation", order = "majority_fixed")
+
+################################################################################################################
+# Nationality ----
+################################################################################################################
+# First degree ----
+## Pushing dataset for nationality for all first degree students
+nationality_fd <- read_sheet('https://docs.google.com/spreadsheets/d/1t13n8PYYs_hh30lIwrGsSPwlFvydv014i0he7RqUadc/edit#gid=1229016447')
+
+# Merging the ethnicity for first degree students and HEI info datasets
+nationality_fd2 <- merge(nationality_fd, hei_data, by = 'hei', all.x = T)
+
+# Segplot
+# 2010
+nationality_fd2 %>% 
+  filter(fte != 'NA') %>%
+  filter(nationality != 'Not known/stateless' ) %>%
+  filter(acyear == '2010') %>% 
+  segplot(., "nationality", "hei", weight = "fte",
+          secondary_plot = "segregation", order = "majority_fixed")
+
+# 2020
+nationality_fd2 %>% 
+  filter(fte != 'NA') %>%
+  filter(nationality != 'Not known/stateless' ) %>%
+  filter(acyear == '2020') %>% 
+  segplot(., "nationality", "hei", weight = "fte",
+          secondary_plot = "segregation", order = "majority_fixed")
+
+# PGR degree ----
+## Pushing dataset for nationality for all first degree students
+nationality_pgr <- read_sheet('https://docs.google.com/spreadsheets/d/1wR-nPWghx2b56uUP29g_CP3y6MqTeX66U7k_kwudRoM/edit#gid=1330270309')
+
+# Merging the ethnicity for first degree students and HEI info datasets
+nationality_pgr2 <- merge(nationality_pgr, hei_data, by = 'hei', all.x = T)
+
+# 2010
+nationality_pgr2 %>% 
+  filter(fte != 'NA') %>%
+  filter(nationality != 'Not known/stateless' ) %>%
+  filter(acyear == '2010') %>% 
+  segplot(., "nationality", "hei", weight = "fte",
+          secondary_plot = "segregation", order = "majority_fixed")
+
+# 2020
+nationality_pgr2 %>% 
+  filter(fte != 'NA') %>%
+  filter(nationality != 'Not known/stateless' ) %>%
+  filter(acyear == '2020') %>% 
+  segplot(., "nationality", "hei", weight = "fte",
+          secondary_plot = "segregation", order = "majority_fixed")
+
+
+
+# Staff ----
+## Pushing dataset for nationality for all first degree students
+nationality_staff <- read_sheet('https://docs.google.com/spreadsheets/d/12NT0-FqsB8smNjxpES3cCXWSDgBbnDYZYKJxoFoLUko/edit#gid=1918533626')
+
+# Merging the ethnicity for first degree students and HEI info datasets
+nationality_staff2 <- merge(nationality_staff, hei_data, by = 'hei', all.x = T)
+
+# 2010
+nationality_staff2 %>% 
+  filter(fte != 'NA') %>%
+  filter(nationality != 'Not known') %>%
+  filter(acyear == '2010') %>% 
+  segplot(., "nationality", "hei", weight = "fte",
+          secondary_plot = "segregation", order = "majority_fixed")
+
+# 2020
+nationality_staff2 %>% 
+  filter(fte != 'NA') %>%
+  filter(nationality != 'Not known') %>%
+  filter(acyear == '2020') %>% 
+  segplot(., "nationality", "hei", weight = "fte",
           secondary_plot = "segregation")
